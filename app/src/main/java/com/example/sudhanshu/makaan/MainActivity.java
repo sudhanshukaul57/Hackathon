@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     private String midUrl="]},%22paging%22:{%22start%22:";
     private boolean filter;
     private long count;
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         recyclerView.setLayoutManager(layoutManager);
         customNetworkRequest = CustomNetworkRequest.getInstance(getApplicationContext());
         imageLoader=customNetworkRequest.getImageLoader();
+        progressBar=findViewById(R.id.progressBar);
 
         /**
          * Button is used for applying filters. This will start new activity and after applying filters
@@ -103,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
     private void loadNextDataFromApi(int page) {
 
+        progressBar.setVisibility(View.VISIBLE);
         start=(page-1)*20;
         url.replace(0,url.length(),startUrl + listingType + equalUrl+ midUrl + start +endUrl);
         customNetworkRequest.callGetApi(this, this, ""+url);
@@ -119,7 +123,8 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     @Override
     public void onResponse(String response) {
 
-        Log.e("NetworkRequest","responseListener is called");
+        progressBar.setVisibility(View.INVISIBLE);
+        Log.e("NetworkRequest",response);
 
         if(TextUtils.isEmpty(response))
             return;
@@ -156,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                 makaanDataAdapter.setNewData(makaanListing);
                 makaanDataAdapter.notifyDataSetChanged();
                 this.filter=false;
+                layoutManager.scrollToPosition(0);
             }
         }
 
@@ -167,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
+                progressBar.setVisibility(View.VISIBLE);
                 filter=true;
                 count=data.getLongExtra("count",0);
 
@@ -175,12 +182,12 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
                 String result=data.getStringExtra("result");
                 equalUrl=new StringBuffer(result);
                 if(equalUrl.length()>0)
-                    filter=true;
                 url.replace(0,url.length(),startUrl + listingType + equalUrl+ midUrl + start +endUrl);
 
                 /**
                  * here again network request takes place after applying filters
                  */
+                Log.e("onActivityresult ",""+url);
                 customNetworkRequest.callGetApi(this, this, ""+url);
             }
             if (resultCode == Activity.RESULT_CANCELED) {
@@ -223,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
      */
 
     public void onCheckBoxClicked(View view) {
+        progressBar.setVisibility(View.VISIBLE);
         filter=true;
         if(aSwitch.isChecked()){
             listingType.replace(0,listingType.length(),"%22Rental%22}}");

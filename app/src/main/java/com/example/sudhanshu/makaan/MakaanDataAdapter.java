@@ -89,7 +89,6 @@ class MakaanDataAdapter extends RecyclerView.Adapter<MakaanDataAdapter.ViewHolde
         if(value.length()==4 || value.length()==5){
             holder.currency.setText("k");
             cost=cost/1000;
-            Log.e("onBindViewHolder ",""+cost);
             value.replace(0,value.length(),""+cost);
             if(value.length()>4)
                 value.replace(0,value.length(),value.substring(0,4));
@@ -98,7 +97,6 @@ class MakaanDataAdapter extends RecyclerView.Adapter<MakaanDataAdapter.ViewHolde
         else if(value.length()==6 || value.length()==7){
             holder.currency.setText("L");
             cost=cost/100000;
-            Log.e("onBindViewHolder ",""+cost);
             value.replace(0,value.length(),""+cost);
             if(value.length()>4)
                 value.replace(0,value.length(),value.substring(0,4));
@@ -107,7 +105,6 @@ class MakaanDataAdapter extends RecyclerView.Adapter<MakaanDataAdapter.ViewHolde
         else{
             holder.currency.setText("Cr");
             cost=cost/10000000;
-            Log.e("onBindViewHolder ",""+cost);
             value.replace(0,value.length(),""+cost);
             if(value.length()>4)
                 value.replace(0,value.length(),value.substring(0,4));
@@ -145,7 +142,7 @@ class MakaanDataAdapter extends RecyclerView.Adapter<MakaanDataAdapter.ViewHolde
         holder.city.setText(""+name+"  |  "+locality+" "+suburb);
 
         /**
-         * for setting suffix for floor value
+         * for setting suffix value for floor count
          */
 
         StringBuffer postText=new StringBuffer();
