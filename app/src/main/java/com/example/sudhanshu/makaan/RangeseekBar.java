@@ -1,7 +1,11 @@
+/**
+ *This library is used for setting thumb color of RangeSeekbar
+ */
+
 package com.example.sudhanshu.makaan;
 
 /**
- * Created by abhishek on 1/29/18.
+ * Created by sudhanshu on 1/29/18.
  */
 
 import android.content.Context;

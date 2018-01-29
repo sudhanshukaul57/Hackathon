@@ -144,13 +144,10 @@ class MakaanDataAdapter extends RecyclerView.Adapter<MakaanDataAdapter.ViewHolde
             suburb.replace(0,suburb.length(),arrayList.get(position).listing.property.project.locality.suburb.label);
         holder.city.setText(""+name+"  |  "+locality+" "+suburb);
 
-
         /**
-         * Below algorithm is used for converting epoch time to month and year
+         * for setting suffix for floor value
          */
-        StringBuffer formatted=new StringBuffer();
-        StringBuffer month=new StringBuffer();
-        StringBuffer year=new StringBuffer();
+
         StringBuffer postText=new StringBuffer();
         long floor=arrayList.get(position).listing.floor;
         if(floor==0)
@@ -163,6 +160,14 @@ class MakaanDataAdapter extends RecyclerView.Adapter<MakaanDataAdapter.ViewHolde
             postText.replace(0,postText.length(),"rd");
         else if(floor>3)
             postText.replace(0,postText.length(),"th");
+
+
+        /**
+         * Below algorithm is used for converting epoch time to month and year
+         */
+        StringBuffer formatted=new StringBuffer();
+        StringBuffer month=new StringBuffer();
+        StringBuffer year=new StringBuffer();
 
         if(arrayList.get(position).listing.property.project.possessionDate!=null){
             long date_value=arrayList.get(position).listing.property.project.possessionDate;
