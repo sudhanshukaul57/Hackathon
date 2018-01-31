@@ -266,10 +266,15 @@ public class FilterRequestActivity extends AppCompatActivity {
         rangeSeekBar.setRangeValues(0,100000000);
         SharedPreferences sharedPreferences = getSharedPreferences("preferences",MODE_PRIVATE);
         checkBox1.setChecked(sharedPreferences.getBoolean("box1",false));
+        filterActivity.filterArray[0]=sharedPreferences.getBoolean("box1",false);
         checkBox2.setChecked(sharedPreferences.getBoolean("box2",false));
+        filterActivity.filterArray[1]=sharedPreferences.getBoolean("box2",false);
         checkBox3.setChecked(sharedPreferences.getBoolean("box3",false));
+        filterActivity.filterArray[2]=sharedPreferences.getBoolean("box3",false);
         checkBox4.setChecked(sharedPreferences.getBoolean("box4",false));
+        filterActivity.filterArray[3]=sharedPreferences.getBoolean("box4",false);
         checkBox5.setChecked(sharedPreferences.getBoolean("box5",false));
+        filterActivity.filterArray[4]=sharedPreferences.getBoolean("box5",false);
         rangeSeekBar.setSelectedMinValue(sharedPreferences.getInt("min",0));
         rangeSeekBar.setSelectedMaxValue( sharedPreferences.getInt("max",100000000));
         min=  sharedPreferences.getInt("min",0);
