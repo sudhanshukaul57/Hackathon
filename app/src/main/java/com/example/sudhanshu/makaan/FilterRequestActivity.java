@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar;
 
 public class FilterRequestActivity extends AppCompatActivity {
     private CheckBox checkBox1;
@@ -23,11 +22,8 @@ public class FilterRequestActivity extends AppCompatActivity {
     private CheckBox checkBox5;
     private Button button;
     private RangeseekBar<Integer> rangeSeekBar;
-    private StringBuffer rangeUrl=new StringBuffer();
     private StringBuffer equalUrl=new StringBuffer();
-    private StringBuffer mainUrl=new StringBuffer();
     private int min,max;
-    private long count;
     private boolean mutex;
     private TextView seekBar1;
     private TextView seekBar2;
@@ -38,6 +34,7 @@ public class FilterRequestActivity extends AppCompatActivity {
     private TextView bhk3;
     private TextView bhk4;
     private TextView bhk5;
+    private FilterActivity filterActivity;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -67,8 +64,8 @@ public class FilterRequestActivity extends AppCompatActivity {
         checkBox4=findViewById(R.id.four);
         checkBox5=findViewById(R.id.five);
         button=findViewById(R.id.button);
+        filterActivity=FilterActivity.getInstance(getApplicationContext());
         loadPreferences();
-
 
         rangeSeekBar.setNotifyWhileDragging(true);
         /**
@@ -90,12 +87,11 @@ public class FilterRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent returnIntent = new Intent();
-                setUrl();
+                equalUrl.replace(0,equalUrl.length(),""+filterActivity.getBedroomFilter()+filterActivity.getRangeFilter(min,max));
                 returnIntent.putExtra("result", (CharSequence) equalUrl);
-                returnIntent.putExtra("count",count);
+                returnIntent.putExtra("count",filterActivity.filterCount);
                 setResult(Activity.RESULT_OK,returnIntent);
                 savePreferences();
-                Log.e("onClickListener ","minimum value is "+min+" maximum value is "+max);
                 finish();
             }
         });
@@ -174,36 +170,13 @@ public class FilterRequestActivity extends AppCompatActivity {
                 bhk1=findViewById(R.id.one_bhk);
                 if (checked){
                     bhk1.setTextColor(Color.WHITE);
-                    count++;
-                    if(mainUrl.length()==0)
-                        mainUrl.append("1");
-                    else
-                        mainUrl.append(",1");
+                    filterActivity.filterArray[0]=true;
 
                 }
 
                 else{
                     bhk1.setTextColor(Color.BLACK);
-                    count--;
-                    if(mainUrl.charAt(0)=='1'){
-                        if(mainUrl.length()==1){
-                            mainUrl.deleteCharAt(0);
-                            break;
-                        }
-                        else
-                            mainUrl.deleteCharAt(0);
-                            mainUrl.deleteCharAt(0);
-                    }
-                    else if(mainUrl.charAt(mainUrl.length()-1)=='1'){
-                        mainUrl.deleteCharAt(mainUrl.length()-1);
-                        mainUrl.deleteCharAt(mainUrl.length()-1);
-                    }
-                    else{
-                        int index =mainUrl.indexOf("1");
-                        mainUrl.deleteCharAt(index-1);
-                        mainUrl.deleteCharAt(index-1);
-                        }
-
+                    filterActivity.filterArray[0]=false;
                 }
                 break;
 
@@ -211,37 +184,13 @@ public class FilterRequestActivity extends AppCompatActivity {
                 bhk2=findViewById(R.id.two_bhk);
                 if (checked){
                     bhk2.setTextColor(Color.WHITE);
-
-                    count++;
-                    if(mainUrl.length()==0)
-                        mainUrl.append("2");
-                    else
-                        mainUrl.append(",2");
+                    filterActivity.filterArray[1]=true;
 
                 }
 
                 else{
                     bhk2.setTextColor(Color.BLACK);
-                    count--;
-                    if(mainUrl.charAt(0)=='2'){
-                        if(mainUrl.length()==1){
-                            mainUrl.deleteCharAt(0);
-                            break;
-                        }
-                        else
-                            mainUrl.deleteCharAt(0);
-                            mainUrl.deleteCharAt(0);
-                    }
-                    else if(mainUrl.charAt(mainUrl.length()-1)=='2'){
-                        mainUrl.deleteCharAt(mainUrl.length()-1);
-                        mainUrl.deleteCharAt(mainUrl.length()-1);
-                    }
-                    else{
-                        int index =mainUrl.indexOf("2");
-                        mainUrl.deleteCharAt(index-1);
-                        mainUrl.deleteCharAt(index-1);
-                        }
-
+                    filterActivity.filterArray[1]=false;
                 }
                 break;
 
@@ -249,36 +198,12 @@ public class FilterRequestActivity extends AppCompatActivity {
                 bhk3=findViewById(R.id.three_bhk);
                 if (checked){
                     bhk3.setTextColor(Color.WHITE);
-                    count++;
-                    if(mainUrl.length()==0)
-                        mainUrl.append("3");
-                    else
-                        mainUrl.append(",3");
-
+                    filterActivity.filterArray[2]=true;
                 }
 
                 else{
                     bhk3.setTextColor(Color.BLACK);
-                    count--;
-                    if(mainUrl.charAt(0)=='3'){
-                        if(mainUrl.length()==1){
-                            mainUrl.deleteCharAt(0);
-                            break;
-                        }
-                        else
-                            mainUrl.deleteCharAt(0);
-                            mainUrl.deleteCharAt(0);
-                    }
-                    else if(mainUrl.charAt(mainUrl.length()-1)=='3'){
-                        mainUrl.deleteCharAt(mainUrl.length()-1);
-                        mainUrl.deleteCharAt(mainUrl.length()-1);
-                    }
-                    else{
-                        int index =mainUrl.indexOf("3");
-                        mainUrl.deleteCharAt(index-1);
-                        mainUrl.deleteCharAt(index-1);
-                        }
-
+                    filterActivity.filterArray[2]=false;
                 }
                 break;
 
@@ -286,36 +211,13 @@ public class FilterRequestActivity extends AppCompatActivity {
                 bhk4=findViewById(R.id.four_bhk);
                 if (checked){
                     bhk4.setTextColor(Color.WHITE);
-                    count++;
-                    if(mainUrl.length()==0)
-                        mainUrl.append("4");
-                    else
-                        mainUrl.append(",4");
+                    filterActivity.filterArray[3]=true;
 
                 }
 
                 else{
                     bhk4.setTextColor(Color.BLACK);
-                    count--;
-                    if(mainUrl.charAt(0)=='4'){
-                        if(mainUrl.length()==1){
-                            mainUrl.deleteCharAt(0);
-                            break;
-                        }
-                        else
-                            mainUrl.deleteCharAt(0);
-                            mainUrl.deleteCharAt(0);
-                    }
-                    else if(mainUrl.charAt(mainUrl.length()-1)=='4'){
-                        mainUrl.deleteCharAt(mainUrl.length()-1);
-                        mainUrl.deleteCharAt(mainUrl.length()-1);
-                    }
-                    else{
-                        int index =mainUrl.indexOf("4");
-                        mainUrl.deleteCharAt(index-1);
-                        mainUrl.deleteCharAt(index-1);
-                        }
-
+                    filterActivity.filterArray[3]=false;
                 }
                 break;
 
@@ -323,35 +225,13 @@ public class FilterRequestActivity extends AppCompatActivity {
                 bhk5=findViewById(R.id.five_bhk);
                 if (checked){
                     bhk5.setTextColor(Color.WHITE);
-                    count++;
-                    if(mainUrl.length()==0)
-                        mainUrl.append("5");
-                    else
-                        mainUrl.append(",5");
+                    filterActivity.filterArray[4]=true;
 
                 }
 
                 else{
                     bhk5.setTextColor(Color.BLACK);
-                    count--;
-                    if(mainUrl.charAt(0)=='5'){
-                        if(mainUrl.length()==1){
-                            mainUrl.deleteCharAt(0);
-                            break;
-                        }
-                        else
-                            mainUrl.deleteCharAt(0);
-                            mainUrl.deleteCharAt(0);
-                    }
-                    else if(mainUrl.charAt(mainUrl.length()-1)=='5'){
-                        mainUrl.deleteCharAt(mainUrl.length()-1);
-                        mainUrl.deleteCharAt(mainUrl.length()-1);
-                    }
-                    else{
-                        int index =mainUrl.indexOf("5");
-                        mainUrl.deleteCharAt(index-1);
-                        mainUrl.deleteCharAt(index-1);
-                        }
+                    filterActivity.filterArray[4]=false;
                 }
 
         }
@@ -361,33 +241,6 @@ public class FilterRequestActivity extends AppCompatActivity {
     /**
      * this method is used for generating url which contains filters for both budget and bedrooms
      */
-    protected void setUrl(){
-        if(mainUrl.length()!=0){
-            if(mainUrl.length()==1)
-                equalUrl.replace(0,equalUrl.length(),",{%22equal%22:{%22bedrooms%22:"+mainUrl+"}}");
-            else
-                equalUrl.replace(0,equalUrl.length(),",{%22equal%22:{%22bedrooms%22:["+mainUrl+"]}}");
-        }
-        else
-            equalUrl.replace(0,equalUrl.length(),"");
-
-        if(min==0 && max==100000000){
-            rangeUrl.replace(0,rangeUrl.length(),"");
-        }
-        else{
-            rangeUrl.replace(0,rangeUrl.length(),",{\"range\":{\"price\":{\"from\":"+min+",\"to\":"+max+"}}}");
-        }
-        if((min!=0 ||max!=100000000)&&mutex){
-            count++;
-            mutex=false;
-        }
-        if(min==0 && max==100000000&&!mutex){
-            count--;
-            mutex=true;
-        }
-
-        equalUrl.replace(0,equalUrl.length(),""+equalUrl+rangeUrl);
-    }
 
     /**
      * Shared Preferences are used here for saving the state of filters data
@@ -400,11 +253,8 @@ public class FilterRequestActivity extends AppCompatActivity {
         editor.putBoolean("box3",checkBox3.isChecked());
         editor.putBoolean("box4",checkBox4.isChecked());
         editor.putBoolean("box5",checkBox5.isChecked());
-        editor.putString("url",""+mainUrl);
         editor.putInt("min",min);
         editor.putInt("max",max);
-        editor.putLong("count_filter",count);
-        editor.putBoolean("mutex",mutex);
         editor.commit();
     }
 
@@ -420,18 +270,15 @@ public class FilterRequestActivity extends AppCompatActivity {
         checkBox3.setChecked(sharedPreferences.getBoolean("box3",false));
         checkBox4.setChecked(sharedPreferences.getBoolean("box4",false));
         checkBox5.setChecked(sharedPreferences.getBoolean("box5",false));
-        mainUrl.replace(0,mainUrl.length(),sharedPreferences.getString("url",""));
         rangeSeekBar.setSelectedMinValue(sharedPreferences.getInt("min",0));
         rangeSeekBar.setSelectedMaxValue( sharedPreferences.getInt("max",100000000));
         min=  sharedPreferences.getInt("min",0);
         max=  sharedPreferences.getInt("max",100000000);
-        count=sharedPreferences.getLong("count_filter",0);
-        mutex=sharedPreferences.getBoolean("mutex",true);
         setRange(min,max);
         }
 
     /**
-     * here onDestroy() will pass return o
+     * here onDestroy() will not set the filters
      */
 
     @Override

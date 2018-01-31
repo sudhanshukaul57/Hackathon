@@ -41,10 +41,12 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     private boolean filter;
     private long count;
     private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        clearPreferences();
         start=0;
         equalUrl=new StringBuffer();
          url=new StringBuffer(startUrl +
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
          * Button is used for applying filters. This will start new activity and after applying filters
          * intent will be passed to the current activity
          */
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +120,8 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.e("error",error.toString());
+        progressBar.setVisibility(View.INVISIBLE);
+        Toast.makeText(this,"Network Error",Toast.LENGTH_LONG).show();
 
     }
 
@@ -193,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
             if (resultCode == Activity.RESULT_CANCELED) {
                 filter=false;
             }
+            Log.e("onActivityResult() ",""+filter);
         }
     }
 
@@ -219,6 +225,10 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        clearPreferences();
+    }
+
+    private void clearPreferences() {
         SharedPreferences sharedPreferences=getSharedPreferences("preferences",MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.clear().commit();
@@ -231,8 +241,12 @@ public class MainActivity extends AppCompatActivity implements Response.Listener
 
     public void onCheckBoxClicked(View view) {
         progressBar.setVisibility(View.VISIBLE);
+        clearPreferences();
+        count=0;
+        setFilter();
         filter=true;
         if(aSwitch.isChecked()){
+
             listingType.replace(0,listingType.length(),"%22Rental%22}}");
         }
         else{
